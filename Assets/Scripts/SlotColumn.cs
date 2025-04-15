@@ -92,11 +92,11 @@ public class SlotColumn : MonoBehaviour
         spinTimer = 0f;
     }
 
-    public List<string> GetVisibleSymbolNames()
+    public List<Symbol> GetVisibleSymbolNames()
     {
-        List<string> result = new List<string>();
+        List<Symbol> result = new List<Symbol>();
 
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < Constants.MAX_ROW; i++)
         {
             float targetY = -i * spacing;
 
@@ -105,9 +105,9 @@ public class SlotColumn : MonoBehaviour
                 float diff = Mathf.Abs(symbol.localPosition.y - targetY);
                 if (diff < 0.01f) 
                 {
-                    SpriteRenderer sr = symbol.GetComponent<SpriteRenderer>();
-                    if (sr != null && sr.sprite != null)
-                        result.Add(sr.sprite.name);
+                    Symbol tempSymbol = symbol.GetComponent<Symbol>();
+                    if (tempSymbol != null)
+                        result.Add(tempSymbol);
                 }
             }
         }

@@ -935,6 +935,7 @@ MonoBehaviour:
   - {fileID: 136289306}
   waitTime: 0.5
   spinButton: {fileID: 1633066642}
+  paytable: {fileID: 11400000, guid: 4fe3805708ab3554d8b196090aaecf44, type: 2}
 --- !u!4 &686323142
 Transform:
   m_ObjectHideFlags: 0
@@ -1261,10 +1262,10 @@ RectTransform:
   - {fileID: 1640273828}
   m_Father: {fileID: 1349255369}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -101.27}
-  m_SizeDelta: {x: 114.4744, y: 21.464}
+  m_AnchorMin: {x: 0.41238964, y: 0.015495417}
+  m_AnchorMax: {x: 0.5772922, y: 0.0762477}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1633066642
 MonoBehaviour:
