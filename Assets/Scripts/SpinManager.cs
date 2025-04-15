@@ -3,6 +3,8 @@ using UnityEngine.UI;
 
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
+using Unity.VisualScripting;
 public class SpinManager : MonoBehaviour
 {
     [SerializeField] SlotColumn[] slotColumns;
@@ -12,12 +14,39 @@ public class SpinManager : MonoBehaviour
     private Symbol[,] symbols = new Symbol[3,5];
 
     [SerializeField] private Paytable paytable;
+
+    [SerializeField] private TextMeshProUGUI creditText;
+
+    [SerializeField] private int credits;
+
+    [SerializeField] private Transform highlightContent;
+    private Transform[] highlights;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        InitHighlights();
+    }
+
+    private void InitHighlights(){
+        highlights = new Transform[highlightContent.childCount];
+        for (int i = 0; i < highlightContent.childCount; i++){
+            highlights[i] = highlightContent.GetChild(i);
+            highlights[i].gameObject.SetActive(false);
+        }
         
     }
 
+    private void SetHighlight(Vector3 pos, int it){
+        highlights[it].position = pos;
+        highlights[it].gameObject.SetActive(true);
+
+    }
+
+    private void ResetHighlights(){
+        for (int i = 0; i < highlightContent.childCount; i++){
+            highlights[i].gameObject.SetActive(false);
+        }
+    }
     // Update is called once per frame
     void Update()
     {
@@ -55,7 +84,14 @@ public class SpinManager : MonoBehaviour
         }
         DebugMatrix();
         
+        credits += ProcessReward();
+        creditText.text = "Creditos: " + credits;
+        
 
+        return true;
+    }
+
+    private int ProcessReward(){
         int reward = 0;
         foreach(GameObject symbolCheck in paytable.symbolsChecker){
             Prize result = CheckPrize(symbolCheck.GetComponent<Symbol>().id);
@@ -65,16 +101,15 @@ public class SpinManager : MonoBehaviour
             if (reward > 0)
             {
                 Debug.Log($"<color=yellow>Premio: símbolo {result.symbolId} x{result.matchCount} → {reward} créditos</color>");
-                return true;
+                return reward;
             }
         }
 
         if (reward == 0){
                  Debug.Log($"<color=red>No hubo premio</color>");
-            
-        }
 
-        return true;
+        }
+        return reward;
     }
 
     private Prize CheckPrize(int id_prize)
@@ -93,6 +128,7 @@ public class SpinManager : MonoBehaviour
         {
             if (symbols[row, column].id == id_prize)
             {
+                SetHighlight(symbols[row, column].gameObject.transform.position, it_prize);
                 it_prize++;
                 column++;
 
@@ -100,6 +136,7 @@ public class SpinManager : MonoBehaviour
                 {
                     for (int i = column; i < Constants.MAX_COLUMN; i++){
                         if (symbols[row, i].id == id_prize){
+                            SetHighlight(symbols[row, i].gameObject.transform.position, it_prize);
                             it_prize++;
 
                         }else{
@@ -116,6 +153,7 @@ public class SpinManager : MonoBehaviour
                 it_prize = 0;
                 row++;
                 column = 0;
+                ResetHighlights();
             }
 
             
@@ -153,5 +191,6 @@ public class SpinManager : MonoBehaviour
     }
     public void StartSpin(){
         StartCoroutine(Spin());
+        ResetHighlights();
     }
 }
