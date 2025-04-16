@@ -4,5 +4,4 @@ using UnityEngine;
 public class PaytablePattern
 {
     public IntMatrix2D pattern = new IntMatrix2D();
-    public int reward = 100;
 }

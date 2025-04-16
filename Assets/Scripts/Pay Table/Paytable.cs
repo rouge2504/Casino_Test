@@ -20,7 +20,6 @@ public class Paytable : ScriptableObject
                 p.pattern.rows = Constants.MAX_ROW;
                 p.pattern.columns = Constants.MAX_COLUMN;
                 p.pattern.Initialize();
-                p.reward = 100 * (i + 1);
                 patterns.Add(p);
             }
         }

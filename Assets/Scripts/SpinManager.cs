@@ -103,7 +103,7 @@ public class SpinManager : MonoBehaviour
         return true;
     }
 
-    private bool CheckLinePattern(IntMatrix2D pattern, int targetSymbolId)
+    private int CheckLinePattern(IntMatrix2D pattern, int targetSymbolId)
     {
         int it_prize = 0;
         for (int row = 0; row < pattern.rows; row++)
@@ -117,7 +117,7 @@ public class SpinManager : MonoBehaviour
 
                     if (symbols[row, col].id != targetSymbolId){
                         ResetHighlights();
-                        return false; 
+                        return 0; 
                     }else{
                         it_prize++;
                         SetHighlight(symbols[row, col].gameObject.transform.position, it_prize);
@@ -126,19 +126,21 @@ public class SpinManager : MonoBehaviour
                 }
             }
         }
-        return true; 
+        return it_prize; 
     }
 
     private int ProcessReward(){
         int reward = 0;
         foreach(GameObject symbolCheck in paytable.symbolsChecker){
             int id = symbolCheck.GetComponent<Symbol>().id;
-            foreach (var pattern in paytable.patterns)
+            foreach (PaytablePattern pattern in paytable.patterns)
             {
-            if (CheckLinePattern(pattern.pattern, id))
+                int mult = CheckLinePattern(pattern.pattern, id);
+            if (mult != 0)
             {
-                Debug.Log($"<color=green> Coincidencia con patrón para símbolo {id}. Recompensa: {pattern.reward}</color>");
-                return pattern.reward;
+                mult *= paytable.GetReward(id, mult);
+                Debug.Log($"<color=green> Coincidencia con patrón para símbolo {id}. Recompensa: {mult}</color>");
+                return mult;
             }
             }
             Prize result = CheckPrize(symbolCheck.GetComponent<Symbol>().id);
