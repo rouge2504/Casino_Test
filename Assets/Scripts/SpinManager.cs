@@ -22,6 +22,8 @@ public class SpinManager : MonoBehaviour
     [SerializeField] private Transform highlightContent;
     private Transform[] highlights;
 
+    [SerializeField] private AnimationCounter coinCounter;
+
     private bool startSpin;
 
     void Start()
@@ -94,10 +96,12 @@ public class SpinManager : MonoBehaviour
         }
         DebugMatrix();
         
-        credits += ProcessReward();
+        int rewardTemp =ProcessReward();
+        credits += rewardTemp;
+        coinCounter.SetAnimation(coinCounter.totalCoins,rewardTemp);
+        coinCounter.totalCoins = credits;
 
-
-        creditText.text = "Creditos: " + credits;
+        //creditText.text = "Creditos: " + credits;
         
 
         return true;
