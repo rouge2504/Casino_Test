@@ -21,9 +21,12 @@ public class SpinManager : MonoBehaviour
 
     [SerializeField] private Transform highlightContent;
     private Transform[] highlights;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
+    private bool startSpin;
+
     void Start()
     {
+        startSpin = false;
         InitHighlights();
     }
 
@@ -50,10 +53,15 @@ public class SpinManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (Input.GetKeyDown(KeyCode.Space) && !startSpin){
+            startSpin = true;
+            StartCoroutine(Spin());
+            ResetHighlights();
+        }
     }
 
     IEnumerator Spin(){
+        if (startSpin){
         spinButton.interactable = false;
         foreach(SlotColumn slotColumn in slotColumns){
             slotColumn.StartSpin();
@@ -62,6 +70,8 @@ public class SpinManager : MonoBehaviour
         yield return new WaitUntil(() => AllColumnsStopped());
 
         spinButton.interactable = true;
+        startSpin = false;
+    }
     }
 
     private bool AllColumnsStopped()
@@ -85,19 +95,54 @@ public class SpinManager : MonoBehaviour
         DebugMatrix();
         
         credits += ProcessReward();
+
+
         creditText.text = "Creditos: " + credits;
         
 
         return true;
     }
 
+    private bool CheckLinePattern(IntMatrix2D pattern, int targetSymbolId)
+    {
+        int it_prize = 0;
+        for (int row = 0; row < pattern.rows; row++)
+        {
+            for (int col = 0; col < pattern.columns; col++)
+            {
+                int expected = pattern.Get(row, col);
+
+                if (expected == 1)
+                {
+
+                    if (symbols[row, col].id != targetSymbolId){
+                        ResetHighlights();
+                        return false; 
+                    }else{
+                        it_prize++;
+                        SetHighlight(symbols[row, col].gameObject.transform.position, it_prize);
+
+                    }
+                }
+            }
+        }
+        return true; 
+    }
+
     private int ProcessReward(){
         int reward = 0;
         foreach(GameObject symbolCheck in paytable.symbolsChecker){
+            int id = symbolCheck.GetComponent<Symbol>().id;
+            foreach (var pattern in paytable.patterns)
+            {
+            if (CheckLinePattern(pattern.pattern, id))
+            {
+                Debug.Log($"<color=green> Coincidencia con patrón para símbolo {id}. Recompensa: {pattern.reward}</color>");
+                return pattern.reward;
+            }
+            }
             Prize result = CheckPrize(symbolCheck.GetComponent<Symbol>().id);
-
             reward = paytable.GetReward(result.symbolId, result.matchCount);
-
             if (reward > 0)
             {
                 Debug.Log($"<color=yellow>Premio: símbolo {result.symbolId} x{result.matchCount} → {reward} créditos</color>");
@@ -190,6 +235,7 @@ public class SpinManager : MonoBehaviour
         Debug.Log(debugger);
     }
     public void StartSpin(){
+        startSpin = true;
         StartCoroutine(Spin());
         ResetHighlights();
     }
