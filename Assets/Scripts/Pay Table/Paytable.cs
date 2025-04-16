@@ -10,6 +10,10 @@ public class Paytable : ScriptableObject
     public List<PaytablePattern> patterns = new List<PaytablePattern>();
 
 
+
+    /// <summary>
+    /// Al ver en el inspector se ve la matriz para patrones más complejos
+    /// </summary>
     private void OnEnable()
     {
         if (patterns == null || patterns.Count == 0)
@@ -25,6 +29,13 @@ public class Paytable : ScriptableObject
         }
     }
 
+
+    /// <summary>
+    /// Obtiene la recompensa ya pre hecha del scriptable object
+    /// </summary>
+    /// <param name="symbolId"></param>
+    /// <param name="matchCount"></param>
+    /// <returns></returns>
     public int GetReward(int symbolId, int matchCount)
     {
         foreach (var entry in entries)

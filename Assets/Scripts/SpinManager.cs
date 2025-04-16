@@ -32,6 +32,9 @@ public class SpinManager : MonoBehaviour
         InitHighlights();
     }
 
+    /// <summary>
+    /// Inicia los highlights los obtiene del higjlightContent para vaciarlo en un listado
+    /// </summary>
     private void InitHighlights(){
         highlights = new Transform[highlightContent.childCount];
         for (int i = 0; i < highlightContent.childCount; i++){
@@ -41,12 +44,20 @@ public class SpinManager : MonoBehaviour
         
     }
 
+    /// <summary>
+    /// Pone los hihglights en la posicion de los simbolos y la posición en el arreglo
+    /// </summary>
+    /// <param name="pos"></param>
+    /// <param name="it"></param> 
     private void SetHighlight(Vector3 pos, int it){
         highlights[it].position = pos;
         highlights[it].gameObject.SetActive(true);
 
     }
 
+    /// <summary>
+    /// Regresa a falso los highlights para reusarlos
+    /// </summary> 
     private void ResetHighlights(){
         for (int i = 0; i < highlightContent.childCount; i++){
             highlights[i].gameObject.SetActive(false);
@@ -62,6 +73,11 @@ public class SpinManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Con una corutina se inicia el spin, con una variable waitTime hace una espera para cada columna y espera a que
+    /// todas las columnas ser paren
+    /// </summary>
+    /// <returns></returns> 
     IEnumerator Spin(){
         if (startSpin){
         spinButton.interactable = false;
@@ -76,6 +92,10 @@ public class SpinManager : MonoBehaviour
     }
     }
 
+    /// <summary>
+    /// regresa verdadero o falso para saber si ya estan todas las columnas y checa que premio se gano
+    /// </summary>
+    /// <returns></returns> 
     private bool AllColumnsStopped()
     {
         foreach (SlotColumn slot in slotColumns)
@@ -107,6 +127,13 @@ public class SpinManager : MonoBehaviour
         return true;
     }
 
+    /// <summary>
+    /// Checa el patron de línea, se usa para ver los patrones aparte de la linea horizontal
+    /// </summary>
+    /// <param name="pattern"></param>
+    /// <param name="targetSymbolId"></param>
+    /// <returns></returns>
+
     private int CheckLinePattern(IntMatrix2D pattern, int targetSymbolId)
     {
         int it_prize = 0;
@@ -132,6 +159,11 @@ public class SpinManager : MonoBehaviour
         }
         return it_prize; 
     }
+
+    /// <summary>
+    /// Da la recompensa si encuentra un patron o una linea vertical
+    /// </summary>
+    /// <returns></returns>
 
     private int ProcessReward(){
         int reward = 0;
@@ -162,7 +194,12 @@ public class SpinManager : MonoBehaviour
         }
         return reward;
     }
-
+    
+    /// <summary>
+    /// Checa el patron en horizontal y obtiene el premio
+    /// </summary>
+    /// <param name="id_prize"></param>
+    /// <returns></returns>
     private Prize CheckPrize(int id_prize)
     {
         int requiredMatches = 2;
@@ -228,7 +265,9 @@ public class SpinManager : MonoBehaviour
     }
 
 
-
+    /// <summary>
+    /// Pone en consola la matriz con el id de los premios para visualizar que pasa
+    /// </summary>
     private void DebugMatrix(){
         string debugger = "";
         for (int i = 0; i < Constants.MAX_ROW; i++){
@@ -240,6 +279,11 @@ public class SpinManager : MonoBehaviour
 
         Debug.Log(debugger);
     }
+    
+
+    /// <summary>
+    /// Comienza el spin ya se con botón o con barra espaciadora
+    /// </summary>
     public void StartSpin(){
         startSpin = true;
         StartCoroutine(Spin());

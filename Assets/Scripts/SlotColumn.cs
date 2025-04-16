@@ -16,6 +16,11 @@ public class SlotColumn : MonoBehaviour
 
     public bool isSpinning;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
+    
+    
+    /// <summary>
+    /// Comienzo de columna, distribución de los symbolos en el listado y posición
+    /// </summary>
     void Start()
     {
          resetThreshold = -spacing * symbols.Count;
@@ -27,10 +32,17 @@ public class SlotColumn : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
+
     void Update()
     {
-         if (!isSpinning) return;
+        RollSpin();
+    }
+
+    /// <summary>
+    /// Comienza el roll de cada columna, se mueve cada simbolo y cuando llega a un limite, este se repite hacia arriba
+    /// </summary>
+    private void RollSpin(){
+                if (!isSpinning) return;
         spinTimer += Time.deltaTime;
         float t = Mathf.Clamp01(spinTimer / spinDuration); 
         float currentSpeed = spinSpeedCurve.Evaluate(t) * maxSpeed;
@@ -54,6 +66,9 @@ public class SlotColumn : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Para los simbolos y los centra para que no se vean desfasados
+    /// </summary>
     private void SnapSymbols()
     {
         Transform closestToZero = null;
@@ -85,6 +100,11 @@ public class SlotColumn : MonoBehaviour
         }
     }
 
+
+
+    /// <summary>
+    /// Manda el spin individualmente
+    /// </summary>
     public void StartSpin()
     {
         isSpinning = true;
@@ -92,6 +112,12 @@ public class SlotColumn : MonoBehaviour
         spinTimer = 0f;
     }
 
+
+
+    /// <summary>
+    /// Da un listado de que simbolos se detuvieron
+    /// </summary>
+    /// <returns></returns>
     public List<Symbol> GetVisibleSymbolNames()
     {
         List<Symbol> result = new List<Symbol>();
@@ -115,6 +141,11 @@ public class SlotColumn : MonoBehaviour
         return result;
     }
 
+
+/// <summary>
+/// Se obtiene el limite de los simbolos y lo regresa a una posición arriba
+/// </summary>
+/// <returns></returns>
     float GetLimitY()
     {
         float maxY  = float.MinValue;

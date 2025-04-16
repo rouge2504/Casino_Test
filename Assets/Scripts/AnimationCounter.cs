@@ -14,10 +14,8 @@ public class AnimationCounter : MonoBehaviour
     public AnimationCurve curve;
     public float lerpTimeCoin = 1;
     public float _timerCoin = 0;
-    // Start is called before the first frame update
     public bool activeAnimation;
 
-    // Update is called once per frame
 
     public void Init(int amount)
     {
