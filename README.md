@@ -1,6 +1,6 @@
 # Slot Machine / Tragamonedas
 
-> Unity version: 2023.0.23f1
+> Unity version: 6000.0.23f1
 
 A slot machine game project developed in Unity. It supports customizable columns, symbols, and a dynamic paytable system based on symbols or patterns.
 
