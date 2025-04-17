@@ -24,11 +24,14 @@ public class SpinManager : MonoBehaviour
 
     [SerializeField] private AnimationCounter coinCounter;
 
+    [SerializeField] Animator creditAnim;
+
     private bool startSpin;
 
     void Start()
     {
         startSpin = false;
+        creditAnim.gameObject.SetActive(false);
         InitHighlights();
     }
 
@@ -80,6 +83,7 @@ public class SpinManager : MonoBehaviour
     /// <returns></returns> 
     IEnumerator Spin(){
         if (startSpin){
+        creditAnim.gameObject.SetActive(false);
         spinButton.interactable = false;
         foreach(SlotColumn slotColumn in slotColumns){
             slotColumn.StartSpin();
@@ -116,7 +120,12 @@ public class SpinManager : MonoBehaviour
         }
         DebugMatrix();
         
-        int rewardTemp =ProcessReward();
+        int rewardTemp = ProcessReward();
+        if (rewardTemp != 0){
+        creditAnim.gameObject.SetActive(true);
+        if (creditAnim.transform.GetChild(0).gameObject.activeSelf)
+            creditAnim.transform.GetComponentInChildren<TextMeshProUGUI>().text = rewardTemp.ToString();
+        }
         credits += rewardTemp;
         coinCounter.SetAnimation(coinCounter.totalCoins,rewardTemp);
         coinCounter.totalCoins = credits;
